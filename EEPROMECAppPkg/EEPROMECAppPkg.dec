@@ -1,0 +1,19 @@
+## @file
+#  EEPROMECAppPkg package declaration
+##
+
+[Defines]
+  DEC_SPECIFICATION              = 0x0001001A
+  PACKAGE_NAME                   = EEPROMECAppPkg
+  PACKAGE_GUID                   = 4f2f3b1b-7b9a-4a83-8d62-8a3b8f3a6f11
+  PACKAGE_VERSION                = 0.1
+
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
+  UefiBootServicesTableLib
+  BaseLib
+  BaseMemoryLib
+  PrintLib
+  IoLib

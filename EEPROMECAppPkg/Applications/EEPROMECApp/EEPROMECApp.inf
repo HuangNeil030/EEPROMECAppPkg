@@ -1,0 +1,28 @@
+## @file
+#  EEPROM EC tool (UEFI Application)
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001A
+  BASE_NAME                      = EEPROMECApp
+  FILE_GUID                      = 9d6d2dd0-6606-4b4e-9c7b-1a5af5b2b6f1
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 0.1
+  ENTRY_POINT                    = UefiMain
+
+[Sources]
+  EEPROMECApp.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  EEPROMECAppPkg/EEPROMECAppPkg.dec
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
+  UefiBootServicesTableLib
+  BaseLib
+  BaseMemoryLib
+  PrintLib
+  IoLib
