@@ -3,7 +3,35 @@
 # EEPROM/EC Tool — README（使用筆記 / 函數使用方法）
 
 本筆記對應 `EEPROMECTool_Annotated.c`，目的是幫你把「Port I/O / Index I/O」兩條路的觀念、流程、timeout 意義一次釐清。
-
+EEPROM EC TOOL (EC EEPROM 讀寫工具)
+│
+├── UI / Console (使用者介面與終端機控制)
+│   ├── Color             // 設定終端機字體與背景顏色
+│   ├── PrH               // 格式化列印提示文字 (綠色括號)
+│   └── Draw              // 負責渲染主畫面 (標題列、16x16 Hex 網格、ASCII 對照區、快捷鍵)
+│
+├── Wait Helpers (硬體等待與同步機制)
+│   ├── PortWait          // 輪詢實體 I/O Port 狀態 (如 IBF/OBF)，具備 Timeout 超時保護
+│   └── IdxWaitCtl        // 透過間接讀取 EC RAM，等待 Control Register 的特定旗標 (Processing/Start)
+│
+├── Low-Level Access (底層 Index I/O 間接存取層)
+│   ├── IdxRead8          // 寫入 High/Low Index 位址後，從 Data Port 讀取 EC RAM 數值
+│   └── IdxWrite8         // 寫入 High/Low Index 位址後，將數值寫入 Data Port
+│
+├── Protocol Handlers (硬體協定執行層)
+│   ├── PortOp            // 執行標準 KBC/ACPI 的 Port I/O 讀寫命令交握序列 (60/64 或 62/66)
+│   └── IdxExec           // 執行廠商 (ENE/Nuvoton) 特定的 Mailbox 交握 (鎖定 -> 填 Buffer -> 觸發 -> 等待)
+│
+├── High-Level API (高階應用 API 層)
+│   ├── EcSetBank         // 封裝切換 EEPROM Bank 的邏輯 (根據當前 mAccType 自動導向 PortOp 或 IdxExec)
+│   └── EcRW              // 封裝單一 Byte 的讀/寫邏輯 (自動處理讀回驗證與底層導向)
+│
+├── Data & Input (資料管理與使用者輸入)
+│   ├── Refresh           // 觸發 Bank 切換，並連續讀取 256 Bytes 存入 mDump 軟體快取
+│   └── InputHex          // 攔截鍵盤敲擊，過濾非 Hex 字元，並轉換為 UINT32 數值 (支援 Byte/Word/DWord)
+│
+└── Main Entry (主程式入口與事件迴圈)
+    └── UefiMain          // 初始化變數與畫面，進入無窮迴圈攔截按鍵 (方向鍵、F1/F2、I、TAB、R、Enter、ESC)
 ---
 
 ## 1) 介面總覽
